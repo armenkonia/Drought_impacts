@@ -1,0 +1,2 @@
+Preprocessing areas: This process involves ingesting raw LandIQ data from various years, classifying land and crop types, and then storing the results in a pickle file.
+Preprocessing for plotting: This step involves preparing and organizing the dataframes for generating visualizations.
