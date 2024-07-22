@@ -13,7 +13,7 @@ import os
 import pickle
 
 os.chdir(r"C:\Users\armen\OneDrive - UCLA IT Services\UCLA Projects\COEQWAL")
-
+# os.chdir(r"C:\Users\armen\Desktop\Drought Impacts - Final\Drought Declaration")
 #%%
 landiq_2014 = pd.read_pickle('Data\Pickle\landiq_hr.pk')[0].to_crs('epsg:3857')
 landiq_2016 = pd.read_pickle('Data\Pickle\landiq_hr.pk')[1].to_crs('epsg:3857')
@@ -104,12 +104,13 @@ total_area_nl, total_area_plot_nl = calculate_land_area_HR('HR_NAME', 'Natural L
 
 #%%
 
-def calculate_crops_area_hr(landiq_classified):
+def calculate_crops_area_hr(landiq_classified, column='CLASS2'):
     """
     Calculate the crop areas in different hydrologic regions.
 
     Parameters:
     - landiq_classified: DataFrame containing land IQ data.
+    - column: based on which column the class is needed
 
     Returns:
     - crops_area_all_hr: DataFrame containing the calculated crop areas.
@@ -119,7 +120,7 @@ def calculate_crops_area_hr(landiq_classified):
 
     for hr_region in landiq_classified['HR_NAME'].unique():
         crops_hr = landiq_classified[landiq_classified['HR_NAME'] == hr_region]
-        crops_area_hr = crops_hr.groupby(['CLASS2']).sum(numeric_only=True)['ACRES']
+        crops_area_hr = crops_hr.groupby([column]).sum(numeric_only=True)['ACRES']
         crops_area_all_hr = pd.concat([crops_area_all_hr, crops_area_hr], axis=1)
 
     crops_area_all_hr.columns = landiq_classified['HR_NAME'].unique()
@@ -134,9 +135,24 @@ landiq_2020_crops = calculate_crops_area_hr(landiq_2020_classified)
 landiq_2021_crops = calculate_crops_area_hr(landiq_2021_classified)
 landiq_2022_crops = calculate_crops_area_hr(landiq_2022_classified)
 
+landiq_2016_crops_sublass = calculate_crops_area_hr(landiq_2016_classified, column='CROPTYP2')
+landiq_2018_crops_sublass = calculate_crops_area_hr(landiq_2018_classified, column='CROPTYP2')
+landiq_2020_crops_sublass = calculate_crops_area_hr(landiq_2020_classified, column='CROPTYP2')
+landiq_2021_crops_sublass = calculate_crops_area_hr(landiq_2021_classified, column='CROPTYP2')
+landiq_2022_crops_sublass = calculate_crops_area_hr(landiq_2022_classified, column='CROPTYP2')
 #%%
 
-merged_crops = pd.concat([landiq_2016_crops, landiq_2018_crops, landiq_2020_crops, landiq_2021_crops,landiq_2022_crops], axis=1, keys=['2016', '2018', '2020', '2021', '2022'])
+merged_crops = pd.concat([landiq_2016_crops, 
+                          landiq_2018_crops, 
+                          landiq_2020_crops, 
+                          landiq_2021_crops, 
+                          landiq_2022_crops], axis=1, keys=['2016', '2018', '2020', '2021', '2022'])
+merged_crops_sublass = pd.concat([landiq_2016_crops_sublass, 
+                          landiq_2018_crops_sublass, 
+                          landiq_2020_crops_sublass, 
+                          landiq_2021_crops_sublass,
+                          landiq_2022_crops_sublass], axis=1, keys=['2016', '2018', '2020', '2021', '2022'])
+#%%
 
 #%%
 # The code creates a lists for each HR. The rows of each element correspond to different crops, and the columns represent different years
@@ -156,5 +172,7 @@ with open('Data\Pickle\crop_area_HR.pk', 'wb') as file:
 
 loaded_object = [total_area_all, total_area_ag, total_area_ub, total_area_fl, total_area_nl]
 # open a file, where you ant to store the data
-with open('Data\Pickle\land_area_HR.pk', 'wb') as file:
+with open('Data\land_area_HR.pk', 'wb') as file:
     pickle.dump(loaded_object, file)
+    #%%
+merged_crops_sublass.to_csv('Data\crop areas with subclassification.csv')
