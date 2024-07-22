@@ -13,13 +13,13 @@ import pickle
 import plotly.express as px
 import seaborn as sns
 
-# os.chdir(r"C:\Users\armen\OneDrive - UCLA IT Services\UCLA Projects\COEQWAL")
+os.chdir(r"C:\Users\armen\OneDrive - UCLA IT Services\UCLA Projects\COEQWAL")
 #%%
 # import land areas for ag, ub, fl and nl for all Tulare, San Joaquin, and Sacramento
-metadata = pd.read_pickle(r'Data\land_area_HR.pk')
-for i, data in enumerate(metadata):
-    # Update the DataFrame in place based on the condition
-    metadata[i] = data[data.index.isin(['Tulare Lake', 'San Joaquin River', 'Sacramento River'])]
+metadata = pd.read_pickle(r'Data\Pickle\land_area_HR.pk')
+# for i, data in enumerate(metadata):
+#     # Update the DataFrame in place based on the condition
+#     metadata[i] = data[data.index.isin(['Tulare Lake', 'San Joaquin River', 'Sacramento River'])]
     
 land_area_all, land_area_ag, land_area_ub, land_area_fl, land_area_nl = metadata
 
@@ -52,7 +52,7 @@ percentage_change_from_2018 = meta_df.sub(base_year_data, axis='columns').divide
 percentage_change_from_2018 = percentage_change_from_2018.drop('2018')
 
 #%%
-landiq_2016_crops,landiq_2018_crops,landiq_2020_crops,landiq_2021_crops,landiq_2022_crops, all_hr_crops=pd.read_pickle(r'Data\crop_area_HR.pk')
+landiq_2016_crops,landiq_2018_crops,landiq_2020_crops,landiq_2021_crops,landiq_2022_crops, all_hr_crops=pd.read_pickle(r'Data\Pickle\crop_area_HR.pk')
 meta_df_crops = pd.concat(all_hr_crops, axis=1)
 meta_df_crops.columns = meta_df_crops.columns.rename(['Year', 'Region'], level=[0, 1])
 melted_df = pd.melt(meta_df_crops,ignore_index=False)

@@ -10,7 +10,6 @@ This script calculates the mean precipitation for all water years and then norma
 
 Percentile precipitation:
 
-1 - single_rgn_prctl_analyzer
-2 - single_rgn_prctl_analyzer_2yr
-3 - single_rgn_prctl_analyzer_3yr
-4 - plot_pr_percentile
+1 - calculating pr percentiles.py
+2 - save all HR percentile files to one NC file.py
+3 - plot_pr_percentile.ipynb
